@@ -24,6 +24,20 @@ function hideImagePost(feed) {
 
 
 // Hadle post type for video.
+function hideVideoPost(feed) {
+  if (!feed) return;
+
+  console.log('hiding video post');
+
+  for (var i = 0; i < feed.length; i++) {
+    const sharedVideo = feed[i].innerHTML.includes('feed-shared-linkedin-video');
+
+    if (sharedVideo) {
+      console.log('hiding ', feed[i]);
+      feed[i].style = 'display:none;'
+    }
+  }
+}
 
 // Hadle post type for links.
 
@@ -80,6 +94,7 @@ function addObserver() {
       feed = document.getElementsByClassName('feed-shared-update-v2');
       if (feedPrevLength !== feed.length) {
         hideImagePost(feed);
+        hideVideoPost(feed);
 
         feedPrevLength = feed.length;
       }
@@ -105,6 +120,7 @@ function init() {
   }
   console.log('INITIAL feed.length', feed.length);
   hideImagePost(feed);
+  hideVideoPost(feed);
 
   addObserver();
 }
