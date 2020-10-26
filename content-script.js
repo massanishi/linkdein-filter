@@ -44,9 +44,9 @@ function hideLinkPost(feed) {
   console.log('hiding link post');
 
   for (var i = 0; i < feed.length; i++) {
-    const sharedVideo = feed[i].innerHTML.includes('feed-shared-article');
+    const sharedLink = feed[i].innerHTML.includes('feed-shared-article');
 
-    if (sharedVideo) {
+    if (sharedLink) {
       feed[i].style = 'display:none;'
     }
   }
@@ -58,9 +58,9 @@ function hideDocumentPost(feed) {
   console.log('hiding document post');
 
   for (var i = 0; i < feed.length; i++) {
-    const sharedVideo = feed[i].innerHTML.includes('feed-shared-document');
+    const sharedDocument = feed[i].innerHTML.includes('feed-shared-document');
 
-    if (sharedVideo) {
+    if (sharedDocument) {
       feed[i].style = 'display:none;'
     }
   }
