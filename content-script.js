@@ -16,7 +16,6 @@ function hideImagePost(feed) {
     const sharedImage = feed[i].innerHTML.includes('feed-shared-image');
 
     if (sharedImage) {
-      console.log('hiding ', feed[i]);
       feed[i].style = 'display:none;'
     }
   }
@@ -33,7 +32,6 @@ function hideVideoPost(feed) {
     const sharedVideo = feed[i].innerHTML.includes('feed-shared-linkedin-video');
 
     if (sharedVideo) {
-      console.log('hiding ', feed[i]);
       feed[i].style = 'display:none;'
     }
   }
@@ -49,7 +47,20 @@ function hideLinkPost(feed) {
     const sharedVideo = feed[i].innerHTML.includes('feed-shared-article');
 
     if (sharedVideo) {
-      console.log('hiding ', feed[i]);
+      feed[i].style = 'display:none;'
+    }
+  }
+}
+
+function hideDocumentPost(feed) {
+  if (!feed) return;
+
+  console.log('hiding document post');
+
+  for (var i = 0; i < feed.length; i++) {
+    const sharedVideo = feed[i].innerHTML.includes('feed-shared-document');
+
+    if (sharedVideo) {
       feed[i].style = 'display:none;'
     }
   }
@@ -107,6 +118,7 @@ function addObserver() {
         hideImagePost(feed);
         hideVideoPost(feed);
         hideLinkPost(feed);
+        hideDocumentPost(feed);
 
         feedPrevLength = feed.length;
       }
@@ -134,6 +146,7 @@ function init() {
   hideImagePost(feed);
   hideVideoPost(feed);
   hideLinkPost(feed);
+  hideDocumentPost(feed);
 
   addObserver();
 }
