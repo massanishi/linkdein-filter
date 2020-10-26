@@ -40,9 +40,20 @@ function hideVideoPost(feed) {
 }
 
 // Hadle post type for links.
+function hideLinkPost(feed) {
+  if (!feed) return;
 
-// feed-shared-article
+  console.log('hiding link post');
 
+  for (var i = 0; i < feed.length; i++) {
+    const sharedVideo = feed[i].innerHTML.includes('feed-shared-article');
+
+    if (sharedVideo) {
+      console.log('hiding ', feed[i]);
+      feed[i].style = 'display:none;'
+    }
+  }
+}
 
 // Hadle post with text content.
 
@@ -95,6 +106,7 @@ function addObserver() {
       if (feedPrevLength !== feed.length) {
         hideImagePost(feed);
         hideVideoPost(feed);
+        hideLinkPost(feed);
 
         feedPrevLength = feed.length;
       }
@@ -121,6 +133,7 @@ function init() {
   console.log('INITIAL feed.length', feed.length);
   hideImagePost(feed);
   hideVideoPost(feed);
+  hideLinkPost(feed);
 
   addObserver();
 }
