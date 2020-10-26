@@ -5,6 +5,23 @@
 // A list of post.
 let feed;
 
+// Hadle post type for image.
+function hideImagePost(feed) {
+  if (!feed) return;
+
+  console.log('hiding image post');
+
+  for (var i = 0; i < feed.length; i++) {
+    // Raw method. It will be more memory efficient if the child is detected more directly.
+    const sharedImage = feed[i].innerHTML.includes('feed-shared-image');
+
+    if (sharedImage) {
+      console.log('hiding ', feed[i]);
+      feed[i].style = 'display:none;'
+    }
+  }
+}
+
 
 // Hadle post type for video.
 
@@ -87,6 +104,7 @@ function init() {
     throw new Error('no feed with feed-shared-update-v2 class initially found');
   }
   console.log('INITIAL feed.length', feed.length);
+  hideImagePost(feed);
 
   addObserver();
 }
