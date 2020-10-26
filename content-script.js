@@ -93,6 +93,7 @@ function hideActionPost() {
 function addObserver() {
   // Add listener for the wrapper and listen for a chnage.
   const allH1 = document.getElementsByTagName('h1');
+  console.log('addingObserver');
 
   // It will contain logo as h1 in navbar. Remove.
   let feedH1;
@@ -103,6 +104,7 @@ function addObserver() {
     }
   }
 
+  console.log('feedH1', feedH1);
   if (!feedH1) {
     console.error('Failed to find header element to observe');
     return;
@@ -149,17 +151,15 @@ function addObserver() {
   // Structure:
   // ember-view > relative ember-view > feed-shared-update-v2
   // That is why feed-shared-update-v2 does not catch all div afterwards and the shallow mutation observer does not catch them either.
-
   mutationObserver.observe(parent, { childList: true, subtree: true });
-  console.log('parent', parent);
 }
 
 function init() {
   feed = document.getElementsByClassName('feed-shared-update-v2');
   if (feed.length === 0) {
-    throw new Error('no feed with feed-shared-update-v2 class initially found');
+    return;
   }
-  console.log('INITIAL feed.length', feed.length);
+
   hideImagePost(feed);
   hideVideoPost(feed);
   hideLinkPost(feed);
@@ -170,3 +170,10 @@ function init() {
 }
 
 init();
+
+// Linkedin is a single app and content script does not get reloaded when navigating pages.
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.type === 'PAGE_RELOADED') {
+      init();
+    }
+});
