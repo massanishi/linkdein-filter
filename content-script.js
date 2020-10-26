@@ -83,8 +83,19 @@ function hideActionPost() {
 }
 
 // Hadle post with text content.
+function hideTextPost() {
+  if (!feed) return;
 
-// feed-shared-text
+  console.log('hiding text post');
+
+  for (var i = 0; i < feed.length; i++) {
+    const sharedDocument = feed[i].innerHTML.includes('feed-shared-text');
+
+    if (sharedDocument) {
+      feed[i].style = 'display:none;'
+    }
+  }
+}
 
 // Hadle post with user type (companies vs people).
 
