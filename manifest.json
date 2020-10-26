@@ -1,0 +1,20 @@
+  {
+    "name": "LikedIn Filter",
+    "short_name": "likedin_filter",
+    "version": "0.1.0",
+    "description": "Filter linkedin feed",
+    "permissions": ["https://www.linkedin.com/*", "storage"],
+    "background": {
+      "scripts": ["background.js"],
+      "persistent": false
+    },
+    "content_scripts": [{
+     "matches": ["https://www.linkedin.com/*"],
+     "js": ["./content-script.js"],
+     "run_at": "document_idle"
+    }],
+    "browser_action": {
+      "default_title": "LinkedIn Filter"
+    },
+    "manifest_version": 2
+  }
