@@ -52,6 +52,7 @@ function hideLinkPost(feed) {
   }
 }
 
+// Hide document like a slide.
 function hideDocumentPost(feed) {
   if (!feed) return;
 
@@ -59,6 +60,21 @@ function hideDocumentPost(feed) {
 
   for (var i = 0; i < feed.length; i++) {
     const sharedDocument = feed[i].innerHTML.includes('feed-shared-document');
+
+    if (sharedDocument) {
+      feed[i].style = 'display:none;'
+    }
+  }
+}
+
+// hide action. Q&A stuff.
+function hideActionPost() {
+  if (!feed) return;
+
+  console.log('hiding document post');
+
+  for (var i = 0; i < feed.length; i++) {
+    const sharedDocument = feed[i].innerHTML.includes('feed-shared-actor');
 
     if (sharedDocument) {
       feed[i].style = 'display:none;'
@@ -119,6 +135,7 @@ function addObserver() {
         hideVideoPost(feed);
         hideLinkPost(feed);
         hideDocumentPost(feed);
+        hideActionPost(feed);
 
         feedPrevLength = feed.length;
       }
@@ -147,6 +164,7 @@ function init() {
   hideVideoPost(feed);
   hideLinkPost(feed);
   hideDocumentPost(feed);
+  hideActionPost(feed);
 
   addObserver();
 }
