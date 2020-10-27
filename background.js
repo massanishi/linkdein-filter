@@ -2,7 +2,6 @@
 // This does not get called at the initial loading.
 chrome.tabs.onUpdated.addListener((_, __, tab) => {
   // Release previus feed.
-  console.log('tab updated');
 
   if (tab.status === 'complete') {
     const payload = {

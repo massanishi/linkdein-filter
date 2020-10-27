@@ -9,8 +9,6 @@ let feed;
 function hideImagePost(feed) {
   if (!feed) return;
 
-  console.log('hiding image post');
-
   for (var i = 0; i < feed.length; i++) {
     if (!feed[i].children || feed[i].children.length === 0) {
       continue;
@@ -31,8 +29,6 @@ function hideImagePost(feed) {
 function hideVideoPost(feed) {
   if (!feed) return;
 
-  console.log('hiding video post');
-
   for (var i = 0; i < feed.length; i++) {
     if (!feed[i].children || feed[i].children.length === 0) {
       continue;
@@ -41,7 +37,6 @@ function hideVideoPost(feed) {
     for (var j = 0; j < feed[i].children.length; j++) {
       const child = feed[i].children[j];
       if (child.className.includes('feed-shared-linkedin-video')) {
-        console.log('hiding image');
         feed[i].style = 'display:none;'
       }
     }
@@ -52,8 +47,6 @@ function hideVideoPost(feed) {
 function hideLinkPost(feed) {
   if (!feed) return;
 
-  console.log('hiding link post');
-
   for (var i = 0; i < feed.length; i++) {
     if (!feed[i].children || feed[i].children.length === 0) {
       continue;
@@ -62,7 +55,6 @@ function hideLinkPost(feed) {
     for (var j = 0; j < feed[i].children.length; j++) {
       const child = feed[i].children[j];
       if (child.className.includes('feed-shared-article')) {
-        console.log('hiding image');
         feed[i].style = 'display:none;'
       }
     }
@@ -73,8 +65,6 @@ function hideLinkPost(feed) {
 function hideDocumentPost(feed) {
   if (!feed) return;
 
-  console.log('hiding document post');
-
   for (var i = 0; i < feed.length; i++) {
     if (!feed[i].children || feed[i].children.length === 0) {
       continue;
@@ -83,7 +73,6 @@ function hideDocumentPost(feed) {
     for (var j = 0; j < feed[i].children.length; j++) {
       const child = feed[i].children[j];
       if (child.className.includes('feed-shared-document')) {
-        console.log('hiding image');
         feed[i].style = 'display:none;'
       }
     }
@@ -94,8 +83,6 @@ function hideDocumentPost(feed) {
 function hideActionPost() {
   if (!feed) return;
 
-  console.log('hiding document post');
-
   for (var i = 0; i < feed.length; i++) {
     if (!feed[i].children || feed[i].children.length === 0) {
       continue;
@@ -104,7 +91,6 @@ function hideActionPost() {
     for (var j = 0; j < feed[i].children.length; j++) {
       const child = feed[i].children[j];
       if (child.className.includes('feed-shared-actor')) {
-        console.log('hiding image');
         feed[i].style = 'display:none;'
       }
     }
@@ -115,8 +101,6 @@ function hideActionPost() {
 function hideTextPost() {
   if (!feed) return;
 
-  console.log('hiding text post');
-
   for (var i = 0; i < feed.length; i++) {
     if (!feed[i].children || feed[i].children.length === 0) {
       continue;
@@ -125,7 +109,6 @@ function hideTextPost() {
     for (var j = 0; j < feed[i].children.length; j++) {
       const child = feed[i].children[j];
       if (child.className.includes('feed-shared-text')) {
-        console.log('hiding image');
         feed[i].style = 'display:none;'
       }
     }
@@ -135,8 +118,6 @@ function hideTextPost() {
 // Hnadle post with specific text keyword.
 function hideKeywordPost(keyword) {
   if (!feed) return;
-
-  console.log('hiding keyword post');
 
   // Make it case insensitive.
   const regex = new RegExp(keyword, "i");
@@ -151,7 +132,6 @@ function hideKeywordPost(keyword) {
 
       if (child.className.includes('feed-shared-update-v2__description-wrapper')) {
         const sharedKeyword = regex.test(child.innerHTML);
-        console.log('sharedKeyword', sharedKeyword);
 
         if (sharedKeyword) {
           feed[i].style = 'display:none;'
@@ -168,20 +148,16 @@ function hideKeywordPost(keyword) {
 function addObserver() {
   // Add listener for the wrapper and listen for a chnage.
   const allH1 = document.getElementsByTagName('h1');
-  console.log('addingObserver');
 
   // It will contain logo as h1 in navbar. Remove.
   let feedH1;
-  // const feedH1 = allH1.fliter(h1 => !h1.attribs.class.includes('global-nav__branding'))[0];
   for (var i = 0; i < allH1.length; i++) {
     if (!allH1[i].className.includes('global-nav__branding')) {
       feedH1 = allH1[i];
     }
   }
 
-  console.log('feedH1', feedH1);
   if (!feedH1) {
-    console.error('Failed to find header element to observe');
     return;
   }
 
@@ -209,17 +185,16 @@ function addObserver() {
       feed = document.getElementsByClassName('feed-shared-update-v2');
       if (feedPrevLength !== feed.length) {
 
-        // hideImagePost(feed);
-        // hideVideoPost(feed);
-        // hideLinkPost(feed);
-        // hideDocumentPost(feed);
-        // hideActionPost(feed);
+        hideImagePost(feed);
+        hideVideoPost(feed);
+        hideLinkPost(feed);
+        hideDocumentPost(feed);
+        hideActionPost(feed);
         hideKeywordPost('http');
 
         feedPrevLength = feed.length;
       }
 
-      console.log('INSIDE feed.length', feed.length);
     }
     setTimeout(setFeed, gapTime);
   });
@@ -238,11 +213,11 @@ function init() {
   }
 
   hideImagePost(feed);
-  // hideVideoPost(feed);
-  // hideLinkPost(feed);
-  // hideDocumentPost(feed);
-  // hideActionPost(feed);
-  // hideKeywordPost('http');
+  hideVideoPost(feed);
+  hideLinkPost(feed);
+  hideDocumentPost(feed);
+  hideActionPost(feed);
+  hideKeywordPost('http');
 
   addObserver();
 }
