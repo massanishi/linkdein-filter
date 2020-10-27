@@ -155,7 +155,28 @@ function hideKeywordPost(feed, keyword) {
 
 // TODO: Hadle post with user type (companies vs people).
 
-// TODO: Remove promotion
+// Hnadle post with promotion.
+function hidePromotionPost(feed) {
+  if (!feed) return;
+
+  for (var i = 0; i < feed.length; i++) {
+    if (!feed[i].children || feed[i].children.length === 0) {
+      continue;
+    }
+
+    if (feed[i].attribs === 'display-none') {
+      continue;
+    }
+
+    const subDescription = feed[i].getElementsByClassName('feed-shared-actor__sub-description')[0];
+    if (subDescription) {
+      if (subDescription.innerHTML.includes('Promoted')) {
+        feed[i].style = 'display:none;';
+        feed[i].attribs = 'display-none;';
+      }
+    }
+  }
+}
 
 function addObserver() {
   // Add listener for the wrapper and listen for a chnage.
@@ -207,6 +228,7 @@ function addObserver() {
         hideDocumentPost(feed);
         hideActionPost(feed);
         // hideKeywordPost(feed, 'http');
+        hidePromotionPost(feed);
 
         feedPrevLength = feed.length;
       }
@@ -234,6 +256,7 @@ function init() {
   hideDocumentPost(feed);
   hideActionPost(feed);
   // hideKeywordPost(feed, 'http');
+  hidePromotionPost(feed);
 
   addObserver();
 }
