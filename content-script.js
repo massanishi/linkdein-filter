@@ -12,11 +12,16 @@ function hideImagePost(feed) {
   console.log('hiding image post');
 
   for (var i = 0; i < feed.length; i++) {
-    // Raw method. It will be more memory efficient if the child is detected more directly.
-    const sharedImage = feed[i].innerHTML.includes('feed-shared-image');
+    if (!feed[i].children || feed[i].children.length === 0) {
+      continue;
+    }
 
-    if (sharedImage) {
-      feed[i].style = 'display:none;'
+    for (var j = 0; j < feed[i].children.length; j++) {
+      const child = feed[i].children[j];
+      if (child.className.includes('feed-shared-image')) {
+        console.log('hiding image');
+        feed[i].style = 'display:none;'
+      }
     }
   }
 }
@@ -29,10 +34,16 @@ function hideVideoPost(feed) {
   console.log('hiding video post');
 
   for (var i = 0; i < feed.length; i++) {
-    const sharedVideo = feed[i].innerHTML.includes('feed-shared-linkedin-video');
+    if (!feed[i].children || feed[i].children.length === 0) {
+      continue;
+    }
 
-    if (sharedVideo) {
-      feed[i].style = 'display:none;'
+    for (var j = 0; j < feed[i].children.length; j++) {
+      const child = feed[i].children[j];
+      if (child.className.includes('feed-shared-linkedin-video')) {
+        console.log('hiding image');
+        feed[i].style = 'display:none;'
+      }
     }
   }
 }
@@ -44,10 +55,16 @@ function hideLinkPost(feed) {
   console.log('hiding link post');
 
   for (var i = 0; i < feed.length; i++) {
-    const sharedLink = feed[i].innerHTML.includes('feed-shared-article');
+    if (!feed[i].children || feed[i].children.length === 0) {
+      continue;
+    }
 
-    if (sharedLink) {
-      feed[i].style = 'display:none;'
+    for (var j = 0; j < feed[i].children.length; j++) {
+      const child = feed[i].children[j];
+      if (child.className.includes('feed-shared-article')) {
+        console.log('hiding image');
+        feed[i].style = 'display:none;'
+      }
     }
   }
 }
@@ -59,10 +76,16 @@ function hideDocumentPost(feed) {
   console.log('hiding document post');
 
   for (var i = 0; i < feed.length; i++) {
-    const sharedDocument = feed[i].innerHTML.includes('feed-shared-document');
+    if (!feed[i].children || feed[i].children.length === 0) {
+      continue;
+    }
 
-    if (sharedDocument) {
-      feed[i].style = 'display:none;'
+    for (var j = 0; j < feed[i].children.length; j++) {
+      const child = feed[i].children[j];
+      if (child.className.includes('feed-shared-document')) {
+        console.log('hiding image');
+        feed[i].style = 'display:none;'
+      }
     }
   }
 }
@@ -74,10 +97,16 @@ function hideActionPost() {
   console.log('hiding document post');
 
   for (var i = 0; i < feed.length; i++) {
-    const sharedAction = feed[i].innerHTML.includes('feed-shared-actor');
+    if (!feed[i].children || feed[i].children.length === 0) {
+      continue;
+    }
 
-    if (sharedAction) {
-      feed[i].style = 'display:none;'
+    for (var j = 0; j < feed[i].children.length; j++) {
+      const child = feed[i].children[j];
+      if (child.className.includes('feed-shared-actor')) {
+        console.log('hiding image');
+        feed[i].style = 'display:none;'
+      }
     }
   }
 }
@@ -89,10 +118,16 @@ function hideTextPost() {
   console.log('hiding text post');
 
   for (var i = 0; i < feed.length; i++) {
-    const sharedText = feed[i].innerHTML.includes('feed-shared-text');
+    if (!feed[i].children || feed[i].children.length === 0) {
+      continue;
+    }
 
-    if (sharedText) {
-      feed[i].style = 'display:none;'
+    for (var j = 0; j < feed[i].children.length; j++) {
+      const child = feed[i].children[j];
+      if (child.className.includes('feed-shared-text')) {
+        console.log('hiding image');
+        feed[i].style = 'display:none;'
+      }
     }
   }
 }
@@ -107,17 +142,28 @@ function hideKeywordPost(keyword) {
   const regex = new RegExp(keyword, "i");
 
   for (var i = 0; i < feed.length; i++) {
-    const sharedKeyword = regex.test(feed[i].innerHTML);
+    if (!feed[i].children || feed[i].children.length === 0) {
+      continue;
+    }
 
-    if (sharedKeyword) {
-      feed[i].style = 'display:none;'
+    for (var j = 0; j < feed[i].children.length; j++) {
+      const child = feed[i].children[j]
+
+      if (child.className.includes('feed-shared-update-v2__description-wrapper')) {
+        const sharedKeyword = regex.test(child.innerHTML);
+        console.log('sharedKeyword', sharedKeyword);
+
+        if (sharedKeyword) {
+          feed[i].style = 'display:none;'
+        }
+      }
     }
   }
 }
 
-// Hadle post with user type (companies vs people).
+// TODO: Hadle post with user type (companies vs people).
 
-// Remove promotion
+// TODO: Remove promotion
 
 function addObserver() {
   // Add listener for the wrapper and listen for a chnage.
@@ -162,11 +208,12 @@ function addObserver() {
 
       feed = document.getElementsByClassName('feed-shared-update-v2');
       if (feedPrevLength !== feed.length) {
-        hideImagePost(feed);
-        hideVideoPost(feed);
-        hideLinkPost(feed);
-        hideDocumentPost(feed);
-        hideActionPost(feed);
+
+        // hideImagePost(feed);
+        // hideVideoPost(feed);
+        // hideLinkPost(feed);
+        // hideDocumentPost(feed);
+        // hideActionPost(feed);
         hideKeywordPost('http');
 
         feedPrevLength = feed.length;
@@ -191,11 +238,11 @@ function init() {
   }
 
   hideImagePost(feed);
-  hideVideoPost(feed);
-  hideLinkPost(feed);
-  hideDocumentPost(feed);
-  hideActionPost(feed);
-  hideKeywordPost('http');
+  // hideVideoPost(feed);
+  // hideLinkPost(feed);
+  // hideDocumentPost(feed);
+  // hideActionPost(feed);
+  // hideKeywordPost('http');
 
   addObserver();
 }
