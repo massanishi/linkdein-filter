@@ -87,7 +87,7 @@ function hideDocumentPost(feed) {
 }
 
 // hide action. Q&A stuff.
-function hideActionPost() {
+function hideActionPost(feed) {
   if (!feed) return;
 
   for (var i = 0; i < feed.length; i++) {
@@ -107,7 +107,7 @@ function hideActionPost() {
 }
 
 // Hadle post with text content.
-function hideTextPost() {
+function hideTextPost(feed) {
   if (!feed) return;
 
   for (var i = 0; i < feed.length; i++) {
@@ -127,7 +127,7 @@ function hideTextPost() {
 }
 
 // Hnadle post with specific text keyword.
-function hideKeywordPost(keyword) {
+function hideKeywordPost(feed, keyword) {
   if (!feed) return;
 
   // Make it case insensitive.
@@ -203,10 +203,10 @@ function addObserver() {
 
         hideImagePost(feed);
         hideVideoPost(feed);
-        hideLinkPost(feed);
+        // hideLinkPost(feed);
         hideDocumentPost(feed);
         hideActionPost(feed);
-        hideKeywordPost('http');
+        // hideKeywordPost(feed, 'http');
 
         feedPrevLength = feed.length;
       }
@@ -230,10 +230,10 @@ function init() {
 
   hideImagePost(feed);
   hideVideoPost(feed);
-  hideLinkPost(feed);
+  // hideLinkPost(feed);
   hideDocumentPost(feed);
   hideActionPost(feed);
-  hideKeywordPost('http');
+  // hideKeywordPost(feed, 'http');
 
   addObserver();
 }
