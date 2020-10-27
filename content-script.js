@@ -14,11 +14,13 @@ function hideImagePost(feed) {
       continue;
     }
 
-    for (var j = 0; j < feed[i].children.length; j++) {
-      const child = feed[i].children[j];
-      if (child.className.includes('feed-shared-image')) {
-        feed[i].style = 'display:none;'
-      }
+    if (feed[i].attribs === 'display-none') {
+      continue;
+    }
+
+    if (feed[i].getElementsByClassName('feed-shared-image').length > 0) {
+      feed[i].style = 'display:none;';
+      feed[i].attribs = 'display-none;';
     }
   }
 }
@@ -96,11 +98,11 @@ function hideActionPost() {
     if (feed[i].attribs === 'display-none') {
       continue;
     }
-
-    if (feed[i].getElementsByClassName('feed-shared-actor').length > 0) {
-      feed[i].style = 'display:none;';
-      feed[i].attribs = 'display-none;';
-    }
+    // COMMENT: This is a bug. actor class is everywhere.
+    // if (feed[i].getElementsByClassName('feed-shared-actor').length > 0) {
+    //   feed[i].style = 'display:none;';
+    //   feed[i].attribs = 'display-none;';
+    // }
   }
 }
 
@@ -167,11 +169,15 @@ function addObserver() {
     }
   }
 
-  if (!feedH1) {
-    return;
+  let parent;
+  if (feedH1) {
+    parent = feedH1.parentElement;
+  } else {
+    // if no header is there, check if this is the search result feed.
+    parent  = document.getElementsByClassName('search-results__list')[0];
   }
 
-  const parent = feedH1.parentElement;
+  if (!parent) return;
 
   let timer;
   // feed pointer gets updated automatically along with the element. Keep the previous length in cache.
