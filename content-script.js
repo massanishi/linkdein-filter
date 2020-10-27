@@ -17,7 +17,6 @@ function hideImagePost(feed) {
     for (var j = 0; j < feed[i].children.length; j++) {
       const child = feed[i].children[j];
       if (child.className.includes('feed-shared-image')) {
-        console.log('hiding image');
         feed[i].style = 'display:none;'
       }
     }
@@ -34,11 +33,13 @@ function hideVideoPost(feed) {
       continue;
     }
 
-    for (var j = 0; j < feed[i].children.length; j++) {
-      const child = feed[i].children[j];
-      if (child.className.includes('feed-shared-linkedin-video')) {
-        feed[i].style = 'display:none;'
-      }
+    if (feed[i].attribs === 'display-none') {
+      continue;
+    }
+
+    if (feed[i].getElementsByClassName('feed-shared-linkedin-video').length > 0) {
+      feed[i].style = 'display:none;';
+      feed[i].attribs = 'display-none;';
     }
   }
 }
@@ -52,11 +53,13 @@ function hideLinkPost(feed) {
       continue;
     }
 
-    for (var j = 0; j < feed[i].children.length; j++) {
-      const child = feed[i].children[j];
-      if (child.className.includes('feed-shared-article')) {
-        feed[i].style = 'display:none;'
-      }
+    if (feed[i].attribs === 'display-none') {
+      continue;
+    }
+
+    if (feed[i].getElementsByClassName('feed-shared-article').length > 0) {
+      feed[i].style = 'display:none;';
+      feed[i].attribs = 'display-none;';
     }
   }
 }
@@ -70,11 +73,13 @@ function hideDocumentPost(feed) {
       continue;
     }
 
-    for (var j = 0; j < feed[i].children.length; j++) {
-      const child = feed[i].children[j];
-      if (child.className.includes('feed-shared-document')) {
-        feed[i].style = 'display:none;'
-      }
+    if (feed[i].attribs === 'display-none') {
+      continue;
+    }
+
+    if (feed[i].getElementsByClassName('feed-shared-document').length > 0) {
+      feed[i].style = 'display:none;';
+      feed[i].attribs = 'display-none;';
     }
   }
 }
@@ -88,11 +93,13 @@ function hideActionPost() {
       continue;
     }
 
-    for (var j = 0; j < feed[i].children.length; j++) {
-      const child = feed[i].children[j];
-      if (child.className.includes('feed-shared-actor')) {
-        feed[i].style = 'display:none;'
-      }
+    if (feed[i].attribs === 'display-none') {
+      continue;
+    }
+
+    if (feed[i].getElementsByClassName('feed-shared-actor').length > 0) {
+      feed[i].style = 'display:none;';
+      feed[i].attribs = 'display-none;';
     }
   }
 }
@@ -106,11 +113,13 @@ function hideTextPost() {
       continue;
     }
 
-    for (var j = 0; j < feed[i].children.length; j++) {
-      const child = feed[i].children[j];
-      if (child.className.includes('feed-shared-text')) {
-        feed[i].style = 'display:none;'
-      }
+    if (feed[i].attribs === 'display-none') {
+      continue;
+    }
+
+    if (feed[i].getElementsByClassName('feed-shared-text').length > 0) {
+      feed[i].style = 'display:none;';
+      feed[i].attribs = 'display-none;';
     }
   }
 }
@@ -127,16 +136,17 @@ function hideKeywordPost(keyword) {
       continue;
     }
 
-    for (var j = 0; j < feed[i].children.length; j++) {
-      const child = feed[i].children[j]
+    if (feed[i].attribs === 'display-none') {
+      continue;
+    }
 
-      if (child.className.includes('feed-shared-update-v2__description-wrapper')) {
-        const sharedKeyword = regex.test(child.innerHTML);
+    const description = feed[i].getElementsByClassName('feed-shared-update-v2__description-wrapper')[0];
 
-        if (sharedKeyword) {
-          feed[i].style = 'display:none;'
-        }
-      }
+    if (description) {
+      const sharedKeyword = regex.test(description.innerHTML);
+
+      feed[i].style = 'display:none;';
+      feed[i].attribs = 'display-none;';
     }
   }
 }

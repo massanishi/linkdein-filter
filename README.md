@@ -14,7 +14,7 @@ You can use text filter to remove the type of content you are not willing to see
 
 This function exists naitively in Twitter.
 
-# Outreach usage.
+# Outreach usage
 
 You are looking for specific type of people who are sharing content. The filter makes it easier to target specific people.
 
