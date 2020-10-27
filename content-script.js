@@ -74,9 +74,9 @@ function hideActionPost() {
   console.log('hiding document post');
 
   for (var i = 0; i < feed.length; i++) {
-    const sharedDocument = feed[i].innerHTML.includes('feed-shared-actor');
+    const sharedAction = feed[i].innerHTML.includes('feed-shared-actor');
 
-    if (sharedDocument) {
+    if (sharedAction) {
       feed[i].style = 'display:none;'
     }
   }
@@ -89,9 +89,27 @@ function hideTextPost() {
   console.log('hiding text post');
 
   for (var i = 0; i < feed.length; i++) {
-    const sharedDocument = feed[i].innerHTML.includes('feed-shared-text');
+    const sharedText = feed[i].innerHTML.includes('feed-shared-text');
 
-    if (sharedDocument) {
+    if (sharedText) {
+      feed[i].style = 'display:none;'
+    }
+  }
+}
+
+// Hnadle post with specific text keyword.
+function hideKeywordPost(keyword) {
+  if (!feed) return;
+
+  console.log('hiding keyword post');
+
+  // Make it case insensitive.
+  const regex = new RegExp(keyword, "i");
+
+  for (var i = 0; i < feed.length; i++) {
+    const sharedKeyword = regex.test(feed[i].innerHTML);
+
+    if (sharedKeyword) {
       feed[i].style = 'display:none;'
     }
   }
@@ -149,6 +167,7 @@ function addObserver() {
         hideLinkPost(feed);
         hideDocumentPost(feed);
         hideActionPost(feed);
+        hideKeywordPost('http');
 
         feedPrevLength = feed.length;
       }
@@ -176,6 +195,7 @@ function init() {
   hideLinkPost(feed);
   hideDocumentPost(feed);
   hideActionPost(feed);
+  hideKeywordPost('http');
 
   addObserver();
 }
