@@ -14,13 +14,13 @@ function hideImagePost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'display-none') {
+    if (feed[i].attribs === 'nodisplay') {
       continue;
     }
 
     if (feed[i].getElementsByClassName('feed-shared-image').length > 0) {
       feed[i].style = 'display:none;';
-      feed[i].attribs = 'display-none;';
+      feed[i].setAttribute('nodisplay', '');
     }
   }
 }
@@ -35,13 +35,13 @@ function hideVideoPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'display-none') {
+    if (feed[i].attribs === 'nodisplay') {
       continue;
     }
 
     if (feed[i].getElementsByClassName('feed-shared-linkedin-video').length > 0) {
       feed[i].style = 'display:none;';
-      feed[i].attribs = 'display-none;';
+      feed[i].setAttribute('nodisplay', '');
     }
   }
 }
@@ -55,13 +55,13 @@ function hideLinkPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'display-none') {
+    if (feed[i].attribs === 'nodisplay') {
       continue;
     }
 
     if (feed[i].getElementsByClassName('feed-shared-article').length > 0) {
       feed[i].style = 'display:none;';
-      feed[i].attribs = 'display-none;';
+      feed[i].setAttribute('nodisplay', '');
     }
   }
 }
@@ -75,13 +75,13 @@ function hideDocumentPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'display-none') {
+    if (feed[i].attribs === 'nodisplay') {
       continue;
     }
 
     if (feed[i].getElementsByClassName('feed-shared-document').length > 0) {
       feed[i].style = 'display:none;';
-      feed[i].attribs = 'display-none;';
+      feed[i].setAttribute('nodisplay', '');
     }
   }
 }
@@ -95,13 +95,13 @@ function hideActionPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'display-none') {
+    if (feed[i].attribs === 'nodisplay') {
       continue;
     }
     // COMMENT: This is a bug. actor class is everywhere.
     // if (feed[i].getElementsByClassName('feed-shared-actor').length > 0) {
     //   feed[i].style = 'display:none;';
-    //   feed[i].attribs = 'display-none;';
+    //   feed[i].nodisplay('nodisplay', '');
     // }
   }
 }
@@ -115,13 +115,13 @@ function hideTextPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'display-none') {
+    if (feed[i].attribs === 'nodisplay') {
       continue;
     }
 
     if (feed[i].getElementsByClassName('feed-shared-text').length > 0) {
       feed[i].style = 'display:none;';
-      feed[i].attribs = 'display-none;';
+      feed[i].setAttribute('nodisplay', '');
     }
   }
 }
@@ -138,7 +138,7 @@ function hideKeywordPost(feed, keyword) {
       continue;
     }
 
-    if (feed[i].attribs === 'display-none') {
+    if (feed[i].attribs === 'nodisplay') {
       continue;
     }
 
@@ -148,12 +148,12 @@ function hideKeywordPost(feed, keyword) {
       const sharedKeyword = regex.test(description.innerHTML);
 
       feed[i].style = 'display:none;';
-      feed[i].attribs = 'display-none;';
+      feed[i].setAttribute('nodisplay', '');
     }
   }
 }
 
-// TODO: Hadle post with user type (companies vs people).
+// Hadle post with companies.
 
 // Hnadle post with promotion.
 function hidePromotionPost(feed) {
@@ -164,7 +164,7 @@ function hidePromotionPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'display-none') {
+    if (feed[i].attribs === 'nodisplay') {
       continue;
     }
 
@@ -172,7 +172,7 @@ function hidePromotionPost(feed) {
     if (subDescription) {
       if (subDescription.innerHTML.includes('Promoted')) {
         feed[i].style = 'display:none;';
-        feed[i].attribs = 'display-none;';
+        feed[i].setAttribute('nodisplay', '');
       }
     }
   }
