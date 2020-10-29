@@ -14,7 +14,8 @@
      "run_at": "document_idle"
     }],
     "browser_action": {
-      "default_title": "LinkedIn Filter"
+      "default_title": "LinkedIn Filter",
+      "default_popup": "popup.html"
     },
     "manifest_version": 2
   }

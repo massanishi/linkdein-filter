@@ -244,21 +244,40 @@ function addObserver() {
   mutationObserver.observe(parent, { childList: true, subtree: true });
 }
 
+function isDisabled() {
+  const data = {
+    type: 'IS_DISABLED',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
 function init() {
-  feed = document.getElementsByClassName('feed-shared-update-v2');
-  if (feed.length === 0) {
-    return;
-  }
+  // Check for disabled status
+  return isDisabled()
+  .then(disabled => {
+    if (disabled) return;
 
-  hideImagePost(feed);
-  hideVideoPost(feed);
-  // hideLinkPost(feed);
-  hideDocumentPost(feed);
-  hideActionPost(feed);
-  // hideKeywordPost(feed, 'http');
-  hidePromotionPost(feed);
+    feed = document.getElementsByClassName('feed-shared-update-v2');
+    if (feed.length === 0) {
+      return;
+    }
 
-  addObserver();
+    hideImagePost(feed);
+    hideVideoPost(feed);
+    // hideLinkPost(feed);
+    hideDocumentPost(feed);
+    hideActionPost(feed);
+    // hideKeywordPost(feed, 'http');
+    hidePromotionPost(feed);
+
+    addObserver();
+  })
 }
 
 init();
