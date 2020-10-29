@@ -178,9 +178,48 @@ function hidePromotionPost(feed) {
   }
 }
 
+function isDisabled() {
+  const data = {
+    type: 'IS_DISABLED',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
+function isDisabledImage() {
+  const data = {
+    type: 'IS_DISABLED_IMAGE_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
 function isDisabledVideo() {
   const data = {
     type: 'IS_DISABLED_VIDEO_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
+function isDisabledLink() {
+  const data = {
+    type: 'IS_DISABLED_LINK_HIDE',
   };
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage(data, resp => {
@@ -209,29 +248,12 @@ function handleVideoPost(feed) {
   });
 }
 
-function isDisabled() {
-  const data = {
-    type: 'IS_DISABLED',
-  };
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(data, resp => {
-      const disabled = resp.disabled;
+function handleLinkPost(feed) {
+  return isDisabledLink()
+  .then(disabled => {
+    if (disabled) return;
 
-      resolve(disabled);
-    });
-  });
-}
-
-function isDisabledImage() {
-  const data = {
-    type: 'IS_DISABLED_IMAGE_HIDE',
-  };
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(data, resp => {
-      const disabled = resp.disabled;
-
-      resolve(disabled);
-    });
+    hideLinkPost(feed);
   });
 }
 
@@ -281,7 +303,7 @@ function addObserver() {
 
         handleImagePost(feed);
         handleVideoPost(feed);
-        // hideLinkPost(feed);
+        handleLinkPost(feed);
         hideDocumentPost(feed);
         hideActionPost(feed);
         // hideKeywordPost(feed, 'http');
@@ -318,7 +340,7 @@ function init() {
     handleImagePost(feed);
 
     handleVideoPost(feed);
-    // hideLinkPost(feed);
+    handleLinkPost(feed);
     hideDocumentPost(feed);
     hideActionPost(feed);
     // hideKeywordPost(feed, 'http');
