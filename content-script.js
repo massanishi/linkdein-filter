@@ -178,6 +178,41 @@ function hidePromotionPost(feed) {
   }
 }
 
+function handleImagePost(feed) {
+  return isDisabledImage()
+  .then(disabled => {
+    if (disabled) return;
+
+    hideImagePost(feed);
+  });
+}
+
+function isDisabled() {
+  const data = {
+    type: 'IS_DISABLED',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
+function isDisabledImage() {
+  const data = {
+    type: 'IS_DISABLED_IMAGE_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
 function addObserver() {
   // Add listener for the wrapper and listen for a chnage.
   const allH1 = document.getElementsByTagName('h1');
@@ -222,7 +257,7 @@ function addObserver() {
       feed = document.getElementsByClassName('feed-shared-update-v2');
       if (feedPrevLength !== feed.length) {
 
-        hideImagePost(feed);
+        handleImagePost(feed);
         hideVideoPost(feed);
         // hideLinkPost(feed);
         hideDocumentPost(feed);
@@ -244,19 +279,6 @@ function addObserver() {
   mutationObserver.observe(parent, { childList: true, subtree: true });
 }
 
-function isDisabled() {
-  const data = {
-    type: 'IS_DISABLED',
-  };
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(data, resp => {
-      const disabled = resp.disabled;
-
-      resolve(disabled);
-    });
-  });
-}
-
 function init() {
   // Check for disabled status
   return isDisabled()
@@ -268,7 +290,11 @@ function init() {
       return;
     }
 
-    hideImagePost(feed);
+    // Handle posts according to each settings.
+
+    // image
+    handleImagePost(feed);
+
     hideVideoPost(feed);
     // hideLinkPost(feed);
     hideDocumentPost(feed);

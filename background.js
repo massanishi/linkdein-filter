@@ -21,8 +21,6 @@ function disable(disabling) {
       resolve();
     });
   });
-
-
 }
 
 function getDisabledStatus() {
@@ -35,6 +33,34 @@ function getDisabledStatus() {
       // Make it opposite to convert undefined to false;
       const disabled = !!result['disabled'];
       resolve(disabled);
+    });
+  });
+}
+
+function getDisabledImageHideStatus() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get('disabled-image-hide', (result) => {
+      // Result is empty in Firefox using temporary add-on id.
+      if (!result) return Promise.resolve(true);
+
+      // Default is disabled.
+      if (result['disabled-image-hide'] === undefined) return true;
+
+      // Make it opposite to convert undefined to false;
+      const disabled = !!result['disabled-image-hide'];
+      resolve(disabled);
+    });
+  });
+}
+
+function disableImageHide(disabling) {
+  const payload = {
+    ['disabled-image-hide']: disabling,
+  };
+
+  return new Promise((resolve) => {
+    chrome.storage.sync.set(payload, () => {
+      resolve();
     });
   });
 }
@@ -55,6 +81,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (type === 'UPDATE_DISABLED') {
     const disabling = request.disabling;
     disable(disabling)
+    .then(() => {
+      sendResponse({
+        status: 'success',
+      });
+    });
+    return true;
+  } else if (type === 'IS_DISABLED_IMAGE_HIDE') {
+    getDisabledImageHideStatus()
+    .then(disabled => {
+      sendResponse({
+        disabled,
+      });
+    });
+    return true;
+  } else if (type === 'UPDATE_DISABLED_IMAGE_HIDE') {
+    const disabling = request.disabling;
+    disableImageHide(disabling)
     .then(() => {
       sendResponse({
         status: 'success',

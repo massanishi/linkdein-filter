@@ -23,6 +23,31 @@ function disable(evt) {
   });
 }
 
+function isDisabledImage() {
+  const data = {
+    type: 'IS_DISABLED_IMAGE_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
+function disableImageHide(evt) {
+  const disabling = !evt.target.checked;
+
+  const data = {
+    type: 'UPDATE_DISABLED_IMAGE_HIDE',
+    disabling,
+  };
+  chrome.runtime.sendMessage(data, () => {
+    chrome.tabs.reload();
+  });
+}
+
 // disabled switch
 const onOffSwitch = document.getElementById('turn-onoff-switch');
 onOffSwitch.addEventListener('change', disable);
@@ -30,4 +55,12 @@ onOffSwitch.addEventListener('change', disable);
 isDisabled()
 .then(disabled => {
   onOffSwitch.checked = !disabled;
+});
+
+const imageHideSwitch = document.getElementById('image-hide-switch');
+imageHideSwitch.addEventListener('change', disableImageHide);
+
+isDisabledImage()
+.then(disabled => {
+  imageHideSwitch.checked = !disabled;
 });
