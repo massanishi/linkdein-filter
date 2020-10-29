@@ -98,6 +98,31 @@ function disableLinkHide(evt) {
   });
 }
 
+function isDisabledDocument() {
+  const data = {
+    type: 'IS_DISABLED_DOCUMENT_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
+function disableDocumentHide(evt) {
+  const disabling = !evt.target.checked;
+
+  const data = {
+    type: 'UPDATE_DISABLED_DOCUMENT_HIDE',
+    disabling,
+  };
+  chrome.runtime.sendMessage(data, () => {
+    chrome.tabs.reload();
+  });
+}
+
 // disabled switch
 const onOffSwitch = document.getElementById('turn-onoff-switch');
 onOffSwitch.addEventListener('change', disable);
@@ -129,4 +154,12 @@ linkHideSwitch.addEventListener('change', disableLinkHide);
 isDisabledLink()
 .then(disabled => {
   linkHideSwitch.checked = !disabled;
+});
+
+const documentHideSwitch = document.getElementById('document-hide-switch');
+documentHideSwitch.addEventListener('change', disableDocumentHide);
+
+isDisabledDocument()
+.then(disabled => {
+  documentHideSwitch.checked = !disabled;
 });

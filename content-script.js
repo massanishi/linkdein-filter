@@ -230,6 +230,19 @@ function isDisabledLink() {
   });
 }
 
+function isDisabledDocument() {
+  const data = {
+    type: 'IS_DISABLED_DOCUMENT_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
 function handleImagePost(feed) {
   return isDisabledImage()
   .then(disabled => {
@@ -254,6 +267,15 @@ function handleLinkPost(feed) {
     if (disabled) return;
 
     hideLinkPost(feed);
+  });
+}
+
+function handleDocumentPost(feed) {
+  return isDisabledDocument()
+  .then(disabled => {
+    if (disabled) return;
+
+    hideDocumentPost(feed);
   });
 }
 
@@ -304,7 +326,8 @@ function addObserver() {
         handleImagePost(feed);
         handleVideoPost(feed);
         handleLinkPost(feed);
-        hideDocumentPost(feed);
+        handleDocumentPost(feed);
+
         hideActionPost(feed);
         // hideKeywordPost(feed, 'http');
         hidePromotionPost(feed);
@@ -341,7 +364,7 @@ function init() {
 
     handleVideoPost(feed);
     handleLinkPost(feed);
-    hideDocumentPost(feed);
+    handleDocumentPost(feed);
     hideActionPost(feed);
     // hideKeywordPost(feed, 'http');
     hidePromotionPost(feed);
