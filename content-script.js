@@ -153,7 +153,7 @@ function hideKeywordPost(feed, keyword) {
   }
 }
 
-// Hadle post with companies.
+// Hadle post with companies. feed-shared-actor__description contains 'followers'
 
 // Hnadle post with promotion.
 function hidePromotionPost(feed) {
