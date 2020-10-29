@@ -149,6 +149,31 @@ function disableDocumentHide(disabling) {
   });
 }
 
+function getDisabledPromotionHideStatus() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get('disabled-promotion-hide', (result) => {
+      // Result is empty in Firefox using temporary add-on id.
+      if (!result) return Promise.resolve(false);
+
+      // Make it opposite to convert undefined to false;
+      const disabled = !!result['disabled-promotion-hide'];
+      resolve(disabled);
+    });
+  });
+}
+
+function disablePromotionHide(disabling) {
+  const payload = {
+    ['disabled-promotion-hide']: disabling,
+  };
+
+  return new Promise((resolve) => {
+    chrome.storage.sync.set(payload, () => {
+      resolve();
+    });
+  });
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const { tab } = sender;
   const tabId = tab && tab.id || undefined;
@@ -233,6 +258,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (type === 'UPDATE_DISABLED_DOCUMENT_HIDE') {
     const disabling = request.disabling;
     disableDocumentHide(disabling)
+    .then(() => {
+      sendResponse({
+        status: 'success',
+      });
+    });
+    return true;
+  } else if (type === 'IS_DISABLED_PROMOTION_HIDE') {
+    getDisabledPromotionHideStatus()
+    .then(disabled => {
+      sendResponse({
+        disabled,
+      });
+    });
+    return true;
+  } else if (type === 'UPDATE_DISABLED_PROMOTION_HIDE') {
+    const disabling = request.disabling;
+    disablePromotionHide(disabling)
     .then(() => {
       sendResponse({
         status: 'success',

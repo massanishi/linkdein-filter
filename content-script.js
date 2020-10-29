@@ -243,6 +243,19 @@ function isDisabledDocument() {
   });
 }
 
+function isDisabledPromotion() {
+  const data = {
+    type: 'IS_DISABLED_PROMOTION_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
 function handleImagePost(feed) {
   return isDisabledImage()
   .then(disabled => {
@@ -276,6 +289,15 @@ function handleDocumentPost(feed) {
     if (disabled) return;
 
     hideDocumentPost(feed);
+  });
+}
+
+function handlePromotionPost(feed) {
+  return isDisabledPromotion()
+  .then(disabled => {
+    if (disabled) return;
+
+    hidePromotionPost(feed);
   });
 }
 
@@ -327,10 +349,10 @@ function addObserver() {
         handleVideoPost(feed);
         handleLinkPost(feed);
         handleDocumentPost(feed);
+        handlePromotionPost(feed);
 
-        hideActionPost(feed);
+        // hideActionPost(feed);
         // hideKeywordPost(feed, 'http');
-        hidePromotionPost(feed);
 
         feedPrevLength = feed.length;
       }
@@ -358,16 +380,16 @@ function init() {
     }
 
     // Handle posts according to each settings.
-
-    // image
     handleImagePost(feed);
-
     handleVideoPost(feed);
     handleLinkPost(feed);
     handleDocumentPost(feed);
-    hideActionPost(feed);
+    handlePromotionPost(feed);
+
     // hideKeywordPost(feed, 'http');
-    hidePromotionPost(feed);
+
+    // NOTE: Action not working.
+    // hideActionPost(feed);
 
     addObserver();
   })

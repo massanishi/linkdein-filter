@@ -123,6 +123,31 @@ function disableDocumentHide(evt) {
   });
 }
 
+function isDisabledPromotion() {
+  const data = {
+    type: 'IS_DISABLED_PROMOTION_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
+function disablePromotionHide(evt) {
+  const disabling = !evt.target.checked;
+
+  const data = {
+    type: 'UPDATE_DISABLED_PROMOTION_HIDE',
+    disabling,
+  };
+  chrome.runtime.sendMessage(data, () => {
+    chrome.tabs.reload();
+  });
+}
+
 // disabled switch
 const onOffSwitch = document.getElementById('turn-onoff-switch');
 onOffSwitch.addEventListener('change', disable);
@@ -162,4 +187,13 @@ documentHideSwitch.addEventListener('change', disableDocumentHide);
 isDisabledDocument()
 .then(disabled => {
   documentHideSwitch.checked = !disabled;
+});
+
+
+const promotionHideSwitch = document.getElementById('promotion-hide-switch');
+promotionHideSwitch.addEventListener('change', disablePromotionHide);
+
+isDisabledPromotion()
+.then(disabled => {
+  promotionHideSwitch.checked = !disabled;
 });
