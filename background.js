@@ -65,6 +65,34 @@ function disableImageHide(disabling) {
   });
 }
 
+function getDisabledVideoHideStatus() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get('disabled-video-hide', (result) => {
+      // Result is empty in Firefox using temporary add-on id.
+      if (!result) return Promise.resolve(true);
+
+      // Default is disabled.
+      if (result['disabled-video-hide'] === undefined) return true;
+
+      // Make it opposite to convert undefined to false;
+      const disabled = !!result['disabled-video-hide'];
+      resolve(disabled);
+    });
+  });
+}
+
+function disableVideoHide(disabling) {
+  const payload = {
+    ['disabled-video-hide']: disabling,
+  };
+
+  return new Promise((resolve) => {
+    chrome.storage.sync.set(payload, () => {
+      resolve();
+    });
+  });
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const { tab } = sender;
   const tabId = tab && tab.id || undefined;
@@ -98,6 +126,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (type === 'UPDATE_DISABLED_IMAGE_HIDE') {
     const disabling = request.disabling;
     disableImageHide(disabling)
+    .then(() => {
+      sendResponse({
+        status: 'success',
+      });
+    });
+    return true;
+  } else if (type === 'IS_DISABLED_VIDEO_HIDE') {
+    getDisabledVideoHideStatus()
+    .then(disabled => {
+      sendResponse({
+        disabled,
+      });
+    });
+    return true;
+  } else if (type === 'UPDATE_DISABLED_VIDEO_HIDE') {
+    const disabling = request.disabling;
+    disableVideoHide(disabling)
     .then(() => {
       sendResponse({
         status: 'success',

@@ -178,12 +178,34 @@ function hidePromotionPost(feed) {
   }
 }
 
+function isDisabledVideo() {
+  const data = {
+    type: 'IS_DISABLED_VIDEO_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
 function handleImagePost(feed) {
   return isDisabledImage()
   .then(disabled => {
     if (disabled) return;
 
     hideImagePost(feed);
+  });
+}
+
+function handleVideoPost(feed) {
+  return isDisabledVideo()
+  .then(disabled => {
+    if (disabled) return;
+
+    hideVideoPost(feed);
   });
 }
 
@@ -258,7 +280,7 @@ function addObserver() {
       if (feedPrevLength !== feed.length) {
 
         handleImagePost(feed);
-        hideVideoPost(feed);
+        handleVideoPost(feed);
         // hideLinkPost(feed);
         hideDocumentPost(feed);
         hideActionPost(feed);
@@ -295,7 +317,7 @@ function init() {
     // image
     handleImagePost(feed);
 
-    hideVideoPost(feed);
+    handleVideoPost(feed);
     // hideLinkPost(feed);
     hideDocumentPost(feed);
     hideActionPost(feed);
