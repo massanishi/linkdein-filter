@@ -127,11 +127,11 @@ function hideTextPost(feed) {
 }
 
 // Hnadle post with specific text keyword.
-function hideKeywordPost(feed, keyword) {
+function hideKeywordPost(feed, keywords) {
   if (!feed) return;
 
   // Make it case insensitive.
-  const regex = new RegExp(keyword, "i");
+  const regex = new RegExp(keywords.join('|'), "i");
 
   for (var i = 0; i < feed.length; i++) {
     if (!feed[i].children || feed[i].children.length === 0) {
@@ -145,10 +145,12 @@ function hideKeywordPost(feed, keyword) {
     const description = feed[i].getElementsByClassName('feed-shared-update-v2__description-wrapper')[0];
 
     if (description) {
-      const sharedKeyword = regex.test(description.innerHTML);
+      const sharedKeyword = regex.test(description.innerText);
 
-      feed[i].style = 'display:none;';
-      feed[i].setAttribute('nodisplay', '');
+      if (sharedKeyword) {
+        feed[i].style = 'display:none;';
+        feed[i].setAttribute('nodisplay', '');
+      }
     }
   }
 }
@@ -256,6 +258,20 @@ function isDisabledPromotion() {
   });
 }
 
+function loadKeywords() {
+  const data = {
+    type: 'GET_KEYWORDS_HIDE'
+  };
+
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const keywords = resp.keywords;
+
+      resolve(keywords);
+    });
+  });
+}
+
 function handleImagePost(feed) {
   return isDisabledImage()
   .then(disabled => {
@@ -298,6 +314,23 @@ function handlePromotionPost(feed) {
     if (disabled) return;
 
     hidePromotionPost(feed);
+  });
+}
+
+let keywordsToHide;
+function handleKeywords(feed) {
+  let p;
+  if (!keywordsToHide) {
+    p = loadKeywords();
+  } else {
+    p = Promise.resolve(keywordsToHide);
+  }
+
+  p.then(keywords => {
+    keywordsToHide = keywords;
+    if (keywordsToHide.length === 0) return;
+
+    hideKeywordPost(feed, keywords);
   });
 }
 
@@ -351,8 +384,9 @@ function addObserver() {
         handleDocumentPost(feed);
         handlePromotionPost(feed);
 
+        handleKeywords(feed);
+
         // hideActionPost(feed);
-        // hideKeywordPost(feed, 'http');
 
         feedPrevLength = feed.length;
       }
@@ -386,13 +420,13 @@ function init() {
     handleDocumentPost(feed);
     handlePromotionPost(feed);
 
-    // hideKeywordPost(feed, 'http');
+    handleKeywords(feed);
 
     // NOTE: Action not working.
     // hideActionPost(feed);
 
     addObserver();
-  })
+  });
 }
 
 init();

@@ -214,6 +214,7 @@ function addKeyword() {
   chrome.runtime.sendMessage(data, () => {
     keywordToHide.value = '';
     updateKeywordsUI();
+    chrome.tabs.reload();
   });
 }
 
@@ -226,6 +227,7 @@ function removeKeyword(e) {
   };
   chrome.runtime.sendMessage(data, () => {
     updateKeywordsUI();
+    chrome.tabs.reload();
   });
 }
 
