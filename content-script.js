@@ -99,7 +99,7 @@ function hideActionPost(feed) {
       continue;
     }
     // COMMENT: This is a bug. actor class is everywhere.
-    // if (feed[i].getElementsByClassName('feed-shared-actor').length > 0) {
+    // if (feed[i].getElementsByClassName('feed-shared-poll').length > 0) {
     //   feed[i].style = 'display:none;';
     //   feed[i].nodisplay('nodisplay', '');
     // }

@@ -174,6 +174,71 @@ function disablePromotionHide(disabling) {
   });
 }
 
+function addKeywordHide(text) {
+
+  return new Promise((resolve) => {
+    chrome.storage.sync.get('keywords-hide', (result) => {
+      // Result is empty in Firefox using temporary add-on id.
+      let keywords;
+      if (!result || !result['keywords-hide']) {
+        keywords = [text];
+      } else {
+        keywords = result['keywords-hide'];
+        keywords.push(text);
+      }
+
+      const payload = {
+        ['keywords-hide']: keywords,
+      };
+
+      chrome.storage.sync.set(payload, () => {
+        resolve();
+      });
+    });
+  });
+}
+
+function removeKeywordHide(text) {
+
+  return new Promise((resolve) => {
+    chrome.storage.sync.get('keywords-hide', (result) => {
+      // Result is empty in Firefox using temporary add-on id.
+      let keywords;
+      if (!result || !result['keywords-hide']) {
+        keywords = [];
+      } else {
+        keywords = result['keywords-hide'];
+        keywords = keywords.filter(key => key !== text);
+      }
+
+      const payload = {
+        ['keywords-hide']: keywords,
+      };
+
+      chrome.storage.sync.set(payload, () => {
+        resolve();
+      });
+    });
+  });
+}
+
+function getKeywordsHide() {
+
+  return new Promise((resolve) => {
+    chrome.storage.sync.get('keywords-hide', (result) => {
+      // Result is empty in Firefox using temporary add-on id.
+      let keywords;
+      if (!result || !result['keywords-hide']) {
+        keywords = [];
+      } else {
+        keywords = result['keywords-hide'];
+      }
+
+      resolve(keywords);
+    });
+  });
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const { tab } = sender;
   const tabId = tab && tab.id || undefined;
@@ -278,6 +343,33 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     .then(() => {
       sendResponse({
         status: 'success',
+      });
+    });
+    return true;
+  } else if (type === 'ADD_KEYWORD_HIDE') {
+    const text = request.text;
+    addKeywordHide(text)
+    .then(() => {
+      sendResponse({
+        status: 'success',
+      });
+    });
+    return true;
+  } else if (type === 'REMOVE_KEYWORD_HIDE') {
+    const text = request.text;
+    removeKeywordHide(text)
+    .then(() => {
+      sendResponse({
+        status: 'success',
+      });
+    });
+    return true;
+  } else if (type === 'GET_KEYWORDS_HIDE') {
+    const text = request.text;
+    getKeywordsHide(text)
+    .then(keywords => {
+      sendResponse({
+        keywords,
       });
     });
     return true;

@@ -197,3 +197,56 @@ isDisabledPromotion()
 .then(disabled => {
   promotionHideSwitch.checked = !disabled;
 });
+
+
+const keywordHideButton = document.getElementById('add-keyword-hide-button');
+keywordHideButton.addEventListener('click', addKeyword);
+
+function addKeyword() {
+  const keywordToHide = document.getElementById('keyword-hide-input');
+  const text = keywordToHide.value;
+  if (!text || text.length === 0) return;
+
+  const data = {
+    type: 'ADD_KEYWORD_HIDE',
+    text,
+  };
+  chrome.runtime.sendMessage(data, () => {
+    keywordToHide.value = '';
+    updateKeywordsUI();
+  });
+}
+
+function removeKeyword(e) {
+  const text = e.target.innerHTML;
+
+  const data = {
+    type: 'REMOVE_KEYWORD_HIDE',
+    text,
+  };
+  chrome.runtime.sendMessage(data, () => {
+    updateKeywordsUI();
+  });
+}
+
+// Update keyword listing.
+function updateKeywordsUI() {
+  const data = {
+    type: 'GET_KEYWORDS_HIDE',
+  };
+
+  chrome.runtime.sendMessage(data, (resp) => {
+    const keywords = resp.keywords;
+    const keywordsToHide = document.getElementById('keywords-hide');
+    keywordsToHide.innerHTML = '';
+    keywords.forEach(keyword => {
+      const list = document.createElement("li");
+      list.innerHTML = keyword;
+      list.addEventListener('click', removeKeyword);
+      list.style = 'cursor:pointer;';
+      keywordsToHide.appendChild(list);
+    });
+  });
+}
+
+updateKeywordsUI();
