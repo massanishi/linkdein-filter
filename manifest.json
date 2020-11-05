@@ -1,6 +1,6 @@
   {
-    "name": "LikedIn Filter",
-    "short_name": "likedin_filter",
+    "name": "LinkedIn Filter",
+    "short_name": "linkedin_filter",
     "version": "0.2.2",
     "description": "Filter linkedin feed",
     "permissions": ["https://www.linkedin.com/*", "storage"],
