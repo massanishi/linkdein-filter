@@ -14,13 +14,15 @@ function hideImagePost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'nodisplay') {
+    if (feed[i].attribs === 'nodisplay' || feed[i].attribs === 'imagefilterchecked') {
       continue;
     }
 
     if (feed[i].getElementsByClassName('feed-shared-image').length > 0) {
       feed[i].style = 'display:none;';
       feed[i].setAttribute('nodisplay', '');
+    } else {
+      feed[i].setAttribute('imagefilterchecked', '');
     }
   }
 }
@@ -35,13 +37,15 @@ function hideVideoPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'nodisplay') {
+    if (feed[i].attribs === 'nodisplay' || feed[i].attribs === 'videofilterchecked') {
       continue;
     }
 
     if (feed[i].getElementsByClassName('feed-shared-linkedin-video').length > 0) {
       feed[i].style = 'display:none;';
       feed[i].setAttribute('nodisplay', '');
+    } else {
+      feed[i].setAttribute('videofilterchecked', '');
     }
   }
 }
@@ -55,13 +59,15 @@ function hideLinkPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'nodisplay') {
+    if (feed[i].attribs === 'nodisplay' || feed[i].attribs === 'linkfilterchecked') {
       continue;
     }
 
     if (feed[i].getElementsByClassName('feed-shared-article').length > 0) {
       feed[i].style = 'display:none;';
       feed[i].setAttribute('nodisplay', '');
+    } else {
+      feed[i].setAttribute('linkfilterchecked', '');
     }
   }
 }
@@ -75,13 +81,15 @@ function hideDocumentPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'nodisplay') {
+    if (feed[i].attribs === 'nodisplay' || feed[i].attribs === 'documentfilterchecked') {
       continue;
     }
 
     if (feed[i].getElementsByClassName('feed-shared-document').length > 0) {
       feed[i].style = 'display:none;';
       feed[i].setAttribute('nodisplay', '');
+    } else {
+      feed[i].setAttribute('documentfilterchecked', '');
     }
   }
 }
@@ -95,14 +103,16 @@ function hideActionPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'nodisplay') {
+    if (feed[i].attribs === 'nodisplay' || feed[i].attribs === 'actionfilterchecked') {
       continue;
     }
-    // COMMENT: This is a bug. actor class is everywhere.
-    // if (feed[i].getElementsByClassName('feed-shared-poll').length > 0) {
-    //   feed[i].style = 'display:none;';
-    //   feed[i].nodisplay('nodisplay', '');
-    // }
+
+    if (feed[i].getElementsByClassName('feed-shared-poll').length > 0) {
+      feed[i].style = 'display:none;';
+      feed[i].nodisplay('nodisplay', '');
+    } else {
+      feed[i].setAttribute('actionfilterchecked', '');
+    }
   }
 }
 
@@ -115,13 +125,15 @@ function hideTextPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'nodisplay') {
+    if (feed[i].attribs === 'nodisplay' || feed[i].attribs === 'textfilterchecked') {
       continue;
     }
 
     if (feed[i].getElementsByClassName('feed-shared-text').length > 0) {
       feed[i].style = 'display:none;';
       feed[i].setAttribute('nodisplay', '');
+    } else {
+      feed[i].setAttribute('textfilterchecked', '');
     }
   }
 }
@@ -138,19 +150,24 @@ function hideKeywordPost(feed, keywords) {
       continue;
     }
 
-    if (feed[i].attribs === 'nodisplay') {
+    if (feed[i].attribs === 'nodisplay' || feed[i].attribs === 'keywordfilterchecked') {
       continue;
     }
 
     const description = feed[i].getElementsByClassName('feed-shared-update-v2__description-wrapper')[0];
 
-    if (description) {
-      const sharedKeyword = regex.test(description.innerText);
+    if (!description) {
+      feed[i].setAttribute('keywordfilterchecked', '');
+      continue;
+    }
 
-      if (sharedKeyword) {
-        feed[i].style = 'display:none;';
-        feed[i].setAttribute('nodisplay', '');
-      }
+    const sharedKeyword = regex.test(description.innerText);
+
+    if (sharedKeyword) {
+      feed[i].style = 'display:none;';
+      feed[i].setAttribute('nodisplay', '');
+    } else {
+      feed[i].setAttribute('keywordfilterchecked', '');
     }
   }
 }
@@ -166,16 +183,21 @@ function hidePromotionPost(feed) {
       continue;
     }
 
-    if (feed[i].attribs === 'nodisplay') {
+    if (feed[i].attribs === 'nodisplay' || feed[i].attribs === 'promotionfilterchecked') {
       continue;
     }
 
     const subDescription = feed[i].getElementsByClassName('feed-shared-actor__sub-description')[0];
-    if (subDescription) {
-      if (subDescription.innerHTML.includes('Promoted')) {
-        feed[i].style = 'display:none;';
-        feed[i].setAttribute('nodisplay', '');
-      }
+    if (!subDescription) {
+      feed[i].setAttribute('promotionfilterchecked', '');
+      continue;
+    }
+
+    if (subDescription.innerHTML.includes('Promoted')) {
+      feed[i].style = 'display:none;';
+      feed[i].setAttribute('nodisplay', '');
+    } else {
+      feed[i].setAttribute('promotionfilterchecked', '');
     }
   }
 }
