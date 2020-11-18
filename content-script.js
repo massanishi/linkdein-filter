@@ -18,6 +18,7 @@ function hideImagePost(feed) {
       continue;
     }
 
+    // TODO: Need to hide .artdeco-card for multiple image share.
     if (feed[i].getElementsByClassName('feed-shared-image').length > 0) {
       feed[i].style = 'display:none;';
       feed[i].setAttribute('nodisplay', '');
@@ -202,6 +203,68 @@ function hidePromotionPost(feed) {
   }
 }
 
+// Handle all posts in feed.
+function hideAll(feed) {
+  if (!feed) return;
+
+  for (var i = 0; i < feed.length; i++) {
+    if (!feed[i].children || feed[i].children.length === 0) {
+      continue;
+    }
+
+    if (feed[i].attribs === 'nodisplay') {
+      continue;
+    }
+
+    // NOTE: Use visibility hidden instead of display none here. Hiding all posts trigger load more posts easily. That continuous page update will slow down the site.
+    feed[i].style = 'visibility:hidden;';
+    feed[i].setAttribute('nodisplay', '');
+  }
+}
+
+function hidePromotions() {
+  const promotions = document.getElementsByClassName('ad-banner-container');
+
+  if (promotions.length === 0) return;
+
+  for (var i = 0; i < promotions.length; i++) {
+    if (!promotions[i].children || promotions[i].children.length === 0) {
+      continue;
+    }
+
+    if (promotions[i].attribs === 'nodisplay') {
+      continue;
+    }
+
+    // NOTE: Hide instead of display none. It's more aesthetically pleasant to keep the layout.
+    promotions[i].style = 'visibility:hidden;';
+    promotions[i].setAttribute('nodisplay', '');
+  }
+}
+
+function hideNews() {
+  const news = document.getElementsByClassName('news-module');
+
+  if (news.length === 0) return;
+
+  for (var i = 0; i < news.length; i++) {
+    if (!news[i].children || news[i].children.length === 0) {
+      continue;
+    }
+
+    if (news[i].attribs === 'nodisplay') {
+      continue;
+    }
+
+    // NOTE: Hide instead of display none. It's more aesthetically pleasant to keep the layout.
+    news[i].style = 'visibility:hidden;';
+    news[i].setAttribute('nodisplay', '');
+
+    // NOTE: News has a parent wrapper that would show white. Hide that as well.
+    news[i].parentElement.style = 'visibility:hidden;';
+  }
+}
+
 function isDisabled() {
   const data = {
     type: 'IS_DISABLED',
@@ -270,6 +333,19 @@ function isDisabledDocument() {
 function isDisabledPromotion() {
   const data = {
     type: 'IS_DISABLED_PROMOTION_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
+function isDisabledDistractions() {
+  const data = {
+    type: 'IS_DISABLED_DISTRACTIONS',
   };
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage(data, resp => {
@@ -356,6 +432,17 @@ function handleKeywords(feed) {
   });
 }
 
+function handleDistractions(feed) {
+  return isDisabledDistractions()
+  .then(disabled => {
+    if (disabled) return;
+
+    hideAll(feed);
+    hidePromotions();
+    hideNews();
+  });
+}
+
 function addObserver() {
   // Add listener for the wrapper and listen for a chnage.
   const allH1 = document.getElementsByTagName('h1');
@@ -409,6 +496,7 @@ function addObserver() {
         handleKeywords(feed);
 
         // hideActionPost(feed);
+        handleDistractions(feed);
 
         feedPrevLength = feed.length;
       }
@@ -446,6 +534,7 @@ function init() {
 
     // NOTE: Action not working.
     // hideActionPost(feed);
+    handleDistractions(feed)
 
     addObserver();
   });
