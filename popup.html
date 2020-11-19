@@ -21,6 +21,7 @@
     <content>
       <div class="py-3">
         <div class="container col-11">
+          <h3 class="h5 mb-3 mt-1">LinkedIn Feed Filter</h3>
           <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" id="turn-onoff-switch" checked>
             <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="turn-onoff-switch">Enable / Disable</label>
@@ -28,65 +29,68 @@
         </div>
         <hr />
         <div class="container col-11">
-          <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="promotion-hide-switch">
-            <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="promotion-hide-switch">Hide promotion post</label>
-          </div>
-        </div>
-        <hr />
-        <div class="container col-11">
-          <div class="custom-control custom-switch">
-            <!-- default off -->
-            <input type="checkbox" class="custom-control-input" id="image-hide-switch">
-            <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="image-hide-switch">Hide image post</label>
-          </div>
-        </div>
-        <hr />
-        <div class="container col-11">
-          <div class="custom-control custom-switch">
-            <!-- default off -->
-            <input type="checkbox" class="custom-control-input" id="video-hide-switch">
-            <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="video-hide-switch">Hide video post</label>
-          </div>
-        </div>
-        <hr />
-        <div class="container col-11">
-          <div class="custom-control custom-switch">
-            <!-- default off -->
-            <input type="checkbox" class="custom-control-input" id="link-hide-switch">
-            <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="link-hide-switch">Hide link post</label>
-          </div>
-        </div>
-        <hr />
-        <div class="container col-11">
-          <div class="custom-control custom-switch">
-            <!-- default off -->
-            <input type="checkbox" class="custom-control-input" id="document-hide-switch">
-            <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="document-hide-switch">Hide document post</label>
-          </div>
-        </div>
-        <hr />
-        <div class="container col-11">
-          <div class="custom-control custom-switch">
-            <!-- default off -->
-            <input type="checkbox" class="custom-control-input" id="distractions-hide-switch">
-            <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="distractions-hide-switch">Hide all distractions</label>
-          </div>
-        </div>
-        <hr />
-        <div class="container col-11">
-          <div class="form-group">
-            <label for="keyword-hide-input">Filter by keywords</label>
-            <div class="d-flex">
-              <input type="text" class="form-control" id="keyword-hide-input" placeholder="">
-              <button id="add-keyword-hide-button" class="p-1 ml-2 h5 btn btn-primary">Add</button>
+          <h3 class="h5 mb-3">Options</h3>
+          <div class="">
+            <div class="custom-control custom-switch">
+              <!-- default off -->
+              <input type="checkbox" class="custom-control-input" id="distractions-hide-switch">
+              <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="distractions-hide-switch">Hide all distractions</label>
             </div>
           </div>
-        </div>
-        <hr />
-        <div class="container col-11">
-          <label>Keywords filtering</label>
-          <ul id='keywords-hide'></ul>
+          <hr />
+          <div class="">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="promotion-hide-switch">
+              <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="promotion-hide-switch">Hide promotion post</label>
+            </div>
+          </div>
+          <hr />
+          <div class="">
+            <div class="custom-control custom-switch">
+              <!-- default off -->
+              <input type="checkbox" class="custom-control-input" id="image-hide-switch">
+              <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="image-hide-switch">Hide image post</label>
+            </div>
+          </div>
+          <hr />
+          <div class="">
+            <div class="custom-control custom-switch">
+              <!-- default off -->
+              <input type="checkbox" class="custom-control-input" id="video-hide-switch">
+              <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="video-hide-switch">Hide video post</label>
+            </div>
+          </div>
+          <hr />
+          <div class="">
+            <div class="custom-control custom-switch">
+              <!-- default off -->
+              <input type="checkbox" class="custom-control-input" id="link-hide-switch">
+              <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="link-hide-switch">Hide link post</label>
+            </div>
+          </div>
+          <hr />
+          <div class="">
+            <div class="custom-control custom-switch">
+              <!-- default off -->
+              <input type="checkbox" class="custom-control-input" id="document-hide-switch">
+              <label class="custom-control-label" style="cursor:pointer; line-height: 1.4rem;" for="document-hide-switch">Hide document post</label>
+            </div>
+          </div>
+          <hr />
+          <div class="">
+            <div class="form-group">
+              <label for="keyword-hide-input">Filter by keywords</label>
+              <div class="d-flex">
+                <input type="text" class="form-control" id="keyword-hide-input" placeholder="">
+                <button id="add-keyword-hide-button" class="p-1 ml-2 h5 btn btn-primary">Add</button>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="">
+            <label>Keywords filtering</label>
+            <ul id='keywords-hide'></ul>
+          </div>
         </div>
     </content>
 
