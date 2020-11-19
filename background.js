@@ -153,7 +153,10 @@ function getDisabledPromotionHideStatus() {
   return new Promise((resolve) => {
     chrome.storage.sync.get('disabled-promotion-hide', (result) => {
       // Result is empty in Firefox using temporary add-on id.
-      if (!result) return Promise.resolve(false);
+      if (!result) return Promise.resolve(true);
+
+      // Default is disabled.
+      if (result['disabled-document-hide'] === undefined) return true;
 
       // Make it opposite to convert undefined to false;
       const disabled = !!result['disabled-promotion-hide'];
