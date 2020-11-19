@@ -148,6 +148,31 @@ function disablePromotionHide(evt) {
   });
 }
 
+function isDisabledDistractions() {
+  const data = {
+    type: 'IS_DISABLED_DISTRACTIONS',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
+function disableDistractionHide(evt) {
+  const disabling = !evt.target.checked;
+
+  const data = {
+    type: 'UPDATE_DISABLED_DISTRACTIONS',
+    disabling,
+  };
+  chrome.runtime.sendMessage(data, () => {
+    chrome.tabs.reload();
+  });
+}
+
 // disabled switch
 const onOffSwitch = document.getElementById('turn-onoff-switch');
 onOffSwitch.addEventListener('change', disable);
@@ -196,6 +221,14 @@ promotionHideSwitch.addEventListener('change', disablePromotionHide);
 isDisabledPromotion()
 .then(disabled => {
   promotionHideSwitch.checked = !disabled;
+});
+
+const distractionsHideSwitch = document.getElementById('distractions-hide-switch');
+distractionsHideSwitch.addEventListener('change', disableDistractionHide);
+
+isDisabledDistractions()
+.then(disabled => {
+  distractionsHideSwitch.checked = !disabled;
 });
 
 

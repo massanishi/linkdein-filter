@@ -162,9 +162,34 @@ function getDisabledPromotionHideStatus() {
   });
 }
 
+function getDisabledDistractionsHideStatus() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get('disabled-distractions-hide', (result) => {
+      // Result is empty in Firefox using temporary add-on id.
+      if (!result) return Promise.resolve(false);
+
+      // Make it opposite to convert undefined to false;
+      const disabled = !!result['disabled-distractions-hide'];
+      resolve(disabled);
+    });
+  });
+}
+
 function disablePromotionHide(disabling) {
   const payload = {
     ['disabled-promotion-hide']: disabling,
+  };
+
+  return new Promise((resolve) => {
+    chrome.storage.sync.set(payload, () => {
+      resolve();
+    });
+  });
+}
+
+function disableDistractions(disabling) {
+  const payload = {
+    ['disabled-distractions-hide']: disabling,
   };
 
   return new Promise((resolve) => {
@@ -340,6 +365,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (type === 'UPDATE_DISABLED_PROMOTION_HIDE') {
     const disabling = request.disabling;
     disablePromotionHide(disabling)
+    .then(() => {
+      sendResponse({
+        status: 'success',
+      });
+    });
+    return true;
+  } else if (type === 'IS_DISABLED_DISTRACTIONS') {
+    getDisabledDistractionsHideStatus()
+    .then(disabled => {
+      sendResponse({
+        disabled,
+      });
+    });
+    return true;
+  } else if (type === 'UPDATE_DISABLED_DISTRACTIONS') {
+    const disabling = request.disabling;
+    disableDistractions(disabling)
     .then(() => {
       sendResponse({
         status: 'success',
