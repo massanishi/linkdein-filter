@@ -156,7 +156,7 @@ function getDisabledPromotionHideStatus() {
       if (!result) return Promise.resolve(true);
 
       // Default is disabled.
-      if (result['disabled-document-hide'] === undefined) return true;
+      if (result['disabled-promotion-hide'] === undefined) return true;
 
       // Make it opposite to convert undefined to false;
       const disabled = !!result['disabled-promotion-hide'];
@@ -178,6 +178,19 @@ function getDisabledDistractionsHideStatus() {
   });
 }
 
+function getDisabledActivityHideStatus() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get('disabled-activitiy-hide', (result) => {
+      // Result is empty in Firefox using temporary add-on id.
+      if (!result) return Promise.resolve(false);
+
+      // Make it opposite to convert undefined to false;
+      const disabled = !!result['disabled-activitiy-hide'];
+      resolve(disabled);
+    });
+  });
+}
+
 function disablePromotionHide(disabling) {
   const payload = {
     ['disabled-promotion-hide']: disabling,
@@ -193,6 +206,18 @@ function disablePromotionHide(disabling) {
 function disableDistractions(disabling) {
   const payload = {
     ['disabled-distractions-hide']: disabling,
+  };
+
+  return new Promise((resolve) => {
+    chrome.storage.sync.set(payload, () => {
+      resolve();
+    });
+  });
+}
+
+function disableActivities(disabling) {
+  const payload = {
+    ['disabled-activitiy-hide']: disabling,
   };
 
   return new Promise((resolve) => {
@@ -385,6 +410,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (type === 'UPDATE_DISABLED_DISTRACTIONS') {
     const disabling = request.disabling;
     disableDistractions(disabling)
+    .then(() => {
+      sendResponse({
+        status: 'success',
+      });
+    });
+    return true;
+  } else if (type === 'IS_DISABLED_ACTIVITIY_HIDE') {
+    getDisabledActivityHideStatus()
+    .then(disabled => {
+      sendResponse({
+        disabled,
+      });
+    });
+    return true;
+  } else if (type === 'UPDATE_DISABLED_ACTIVITIES') {
+    const disabling = request.disabling;
+    disableActivities(disabling)
     .then(() => {
       sendResponse({
         status: 'success',

@@ -161,11 +161,36 @@ function isDisabledDistractions() {
   });
 }
 
+function isDisabledActivity() {
+  const data = {
+    type: 'IS_DISABLED_ACTIVITIY_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
 function disableDistractionHide(evt) {
   const disabling = !evt.target.checked;
 
   const data = {
     type: 'UPDATE_DISABLED_DISTRACTIONS',
+    disabling,
+  };
+  chrome.runtime.sendMessage(data, () => {
+    chrome.tabs.reload();
+  });
+}
+
+function disableActivitiyHide(evt) {
+  const disabling = !evt.target.checked;
+
+  const data = {
+    type: 'UPDATE_DISABLED_ACTIVITIES',
     disabling,
   };
   chrome.runtime.sendMessage(data, () => {
@@ -229,6 +254,15 @@ distractionsHideSwitch.addEventListener('change', disableDistractionHide);
 isDisabledDistractions()
 .then(disabled => {
   distractionsHideSwitch.checked = !disabled;
+});
+
+
+const activityHideSwitch = document.getElementById('activity-hide-switch');
+activityHideSwitch.addEventListener('change', disableActivitiyHide);
+
+isDisabledActivity()
+.then(disabled => {
+  activityHideSwitch.checked = !disabled;
 });
 
 

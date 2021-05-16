@@ -139,7 +139,7 @@ function hideTextPost(feed) {
   }
 }
 
-// Hnadle post with specific text keyword.
+// Handle post with specific text keyword.
 function hideKeywordPost(feed, keywords) {
   if (!feed) return;
 
@@ -175,7 +175,7 @@ function hideKeywordPost(feed, keywords) {
 
 // Hadle post with companies. feed-shared-actor__description contains 'followers'
 
-// Hnadle post with promotion.
+// Handle post with promotion.
 function hidePromotionPost(feed) {
   if (!feed) return;
 
@@ -199,6 +199,35 @@ function hidePromotionPost(feed) {
       feed[i].setAttribute('nodisplay', '');
     } else {
       feed[i].setAttribute('promotionfilterchecked', '');
+    }
+  }
+}
+
+// Handle activity post that contains header.
+// Note: This will hide LinkedIn's suggestions such as job recommended and popular courses.
+function hideActivityPost(feed) {
+  if (!feed) return;
+
+  for (var i = 0; i < feed.length; i++) {
+    if (!feed[i].children || feed[i].children.length === 0) {
+      continue;
+    }
+
+    if (feed[i].attribs === 'nodisplay' || feed[i].attribs === 'activityfilterchecked') {
+      continue;
+    }
+
+    const sharedHeader = feed[i].getElementsByClassName('feed-shared-header')[0];
+    if (!sharedHeader) {
+      feed[i].setAttribute('activityfilterchecked', '');
+      continue;
+    }
+
+    if (!sharedHeader.innerText.includes('job update')) {
+      feed[i].style = 'display:none;';
+      feed[i].setAttribute('nodisplay', '');
+    } else {
+      feed[i].setAttribute('activityfilterchecked', '');
     }
   }
 }
@@ -356,6 +385,19 @@ function isDisabledDistractions() {
   });
 }
 
+function isDisabledActivities() {
+  const data = {
+    type: 'IS_DISABLED_ACTIVITIY_HIDE',
+  };
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(data, resp => {
+      const disabled = resp.disabled;
+
+      resolve(disabled);
+    });
+  });
+}
+
 function loadKeywords() {
   const data = {
     type: 'GET_KEYWORDS_HIDE'
@@ -443,6 +485,15 @@ function handleDistractions(feed) {
   });
 }
 
+function handleActivities(feed) {
+  return isDisabledActivities()
+  .then(disabled => {
+    if (disabled) return;
+
+    hideActivityPost(feed);
+  });
+}
+
 function addObserver() {
   // Add listener for the wrapper and listen for a chnage.
   const allH1 = document.getElementsByTagName('h1');
@@ -492,6 +543,7 @@ function addObserver() {
         handleLinkPost(feed);
         handleDocumentPost(feed);
         handlePromotionPost(feed);
+        handleActivities(feed);
 
         handleKeywords(feed);
 
@@ -529,6 +581,7 @@ function init() {
     handleLinkPost(feed);
     handleDocumentPost(feed);
     handlePromotionPost(feed);
+    handleActivities(feed);
 
     handleKeywords(feed);
 
