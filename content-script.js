@@ -294,6 +294,52 @@ function hideNews() {
   }
 }
 
+function hideLearning() {
+  const courses = document.getElementsByClassName('learning-top-courses');
+
+  if (courses.length === 0) return;
+
+  for (var i = 0; i < courses.length; i++) {
+    if (!courses[i].children || courses[i].children.length === 0) {
+      continue;
+    }
+
+    if (courses[i].attribs === 'nodisplay') {
+      continue;
+    }
+
+    // NOTE: Hide instead of display none. It's more aesthetically pleasant to keep the layout.
+    courses[i].style = 'visibility:hidden;';
+    courses[i].setAttribute('nodisplay', '');
+
+    // NOTE: courses has a parent wrapper that would show white. Hide that as well.
+    courses[i].parentElement.style = 'visibility:hidden;';
+  }
+}
+
+function hideFollowSuggestions() {
+  const followSuggestions = document.getElementsByClassName('feed-follows-module');
+
+  if (followSuggestions.length === 0) return;
+
+  for (var i = 0; i < followSuggestions.length; i++) {
+    if (!followSuggestions[i].children || followSuggestions[i].children.length === 0) {
+      continue;
+    }
+
+    if (followSuggestions[i].attribs === 'nodisplay') {
+      continue;
+    }
+
+    // NOTE: Hide instead of display none. It's more aesthetically pleasant to keep the layout.
+    followSuggestions[i].style = 'visibility:hidden;';
+    followSuggestions[i].setAttribute('nodisplay', '');
+
+    // NOTE: followSuggestions has a parent wrapper that would show white. Hide that as well.
+    followSuggestions[i].parentElement.style = 'visibility:hidden;';
+  }
+}
+
 function isDisabled() {
   const data = {
     type: 'IS_DISABLED',
@@ -482,6 +528,8 @@ function handleDistractions(feed) {
     hideAll(feed);
     hidePromotions();
     hideNews();
+    hideLearning();
+    hideFollowSuggestions();
   });
 }
 
